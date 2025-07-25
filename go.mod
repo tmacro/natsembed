@@ -2,7 +2,10 @@ module github.com/tmacro/natsembed
 
 go 1.24.5
 
-require github.com/nats-io/nats-server/v2 v2.11.6
+require (
+	github.com/nats-io/nats-server/v2 v2.11.6
+	github.com/nats-io/nats.go v1.43.0
+)
 
 require (
 	github.com/google/go-tpm v0.9.5 // indirect
