@@ -144,6 +144,18 @@ func StoreDir(dir string) ServerOption {
 	}
 }
 
+func WithOptions(serverOpts natsserver.Options) ServerOption {
+	return func(opts *ServerOptions) {
+		opts.Options = serverOpts
+	}
+}
+
+func WithLogger(logger natsserver.Logger) ServerOption {
+	return func(opts *ServerOptions) {
+		opts.Logger = logger
+	}
+}
+
 func applyServerOptions(opts []ServerOption) (*ServerOptions, error) {
 	options := defaultNatsServerOptions
 	for _, opt := range opts {
