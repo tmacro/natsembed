@@ -31,7 +31,6 @@ package main
 import (
     "context"
     "log"
-    "time"
 
     "github.com/nats-io/nats.go"
     "github.com/tmacro/natsembed"
@@ -51,9 +50,6 @@ func main() {
         }
     }()
 
-    // Wait briefly for startup
-    time.Sleep(200 * time.Millisecond)
-
     nc, err := natsembed.InProcessConnection()
     if err != nil {
         log.Fatal(err)
@@ -62,11 +58,12 @@ func main() {
 
     nc.Subscribe("greet", func(m *nats.Msg) {
         log.Printf("received: %s", string(m.Data))
+        cancel() // server stops when ctx is done
     })
 
     nc.Publish("greet", []byte("hello from inside"))
 
-    cancel() // server stops when ctx is done
+    <-ctx.Done()
 }
 ```
 
@@ -113,29 +110,6 @@ All configuration is done via functional `ServerOption`s.
 | `StoreDir(dir string)`                               | Persistent store directory (JetStream).        |
 | `WithOptions(*natsserver.Options)`                   | Provide your own nats server config.           |
 | `WithLogger(natsserver.Logger)`                      | Provide your own logger.                       |
-
-`Peer` is a small struct with `String()` and `URL()` helpers.
-
-```go
-p := natsembed.Peer{Host: "n1.example", Port: 4222}
-log.Println(p.URL()) // nats://n1.example:4222
-```
-
----
-
-## Clustering Example
-
-```go
-natsembed.Start(
-    natsembed.ServerName("node-a"),
-    natsembed.ClusterName("demo-cluster"),
-    natsembed.ClusterHost("127.0.0.1"),
-    natsembed.ClusterPort(6222),
-    natsembed.WithPeer("127.0.0.1", 6223),
-)
-```
-
-Start a second process with matching routes to form the cluster.
 
 ---
 
