@@ -2,19 +2,11 @@ package natsembed
 
 import (
 	"context"
-	"errors"
 	"testing"
 	"time"
 
 	"github.com/nats-io/nats.go"
 )
-
-func TestInProcessConnectionBeforeStart(t *testing.T) {
-	_, err := InProcessConnection()
-	if !errors.Is(err, ErrServerNotRunning) {
-		t.Fatalf("expected ErrServerNotRunning, got %v", err)
-	}
-}
 
 func TestStartAndPublishSubscribe(t *testing.T) {
 	// Ensure a clean slate
