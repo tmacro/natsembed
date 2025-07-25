@@ -25,6 +25,7 @@ type ServerOptions struct {
 
 var defaultNatsServerOptions = ServerOptions{
 	Options: natsserver.Options{
+		ServerName:             "natsembed",
 		Port:                   4222,
 		NoSigs:                 true,
 		DisableJetStreamBanner: true,
